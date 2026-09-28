@@ -1,0 +1,22 @@
+# Instalar OWASP ZAP (para testes manuais e automatizados)
+npm install -g zap-cli
+
+# Iniciar OWASP ZAP
+zap-cli start
+
+# Criar um script para rodar varredura de vulnerabilidades com OWASP ZAP
+create_new_file scripts/run-zap-scan.sh "#!/bin/bash
+zap-cli quick-scan http://localhost:3000 --report-file security-report.html"
+chmod +x scripts/run-zap-scan.sh
+
+# Instalar SonarQube (para análise estática do código)
+run_terminal_command "docker run -d --name sonarqube -p 9000:9000 sonarqube"
+
+# Criar um script para rodar análise com SonarQube
+create_new_file scripts/run-sonar-scan.sh "#!/bin/bash
+sonar-scanner \
+  -Dsonar.projectKey=my-crm-app \
+  -Dsonar.sources=. \
+  -Dsonar.host.url=http://localhost:9000 \
+  -Dsonar.login=your_sonarqube_token"
+chmod +x scripts/run-sonar-scan.sh
