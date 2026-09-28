@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "supabase-dev": {
+      "type": "http",
+      "url": "https://opencrm-supabase-opencrm-supabase-dev.ldlhf1.easypanel.host/mcp",
+      "headers": {
+        "apikey": "${SUPABASE_DEV_SERVICE_ROLE_KEY}"
+      }
+    }
+  }
+}

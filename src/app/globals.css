@@ -1,0 +1,328 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  /* Identidade OpenCRM: Poppins (corpo), Exo 2 (títulos), JetBrains (mono).
+     As variáveis --font-* são injetadas pelo next/font no <html>. */
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono-brand);
+  --font-heading: var(--font-display);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  /* Secondary card surface (tile / hover backgrounds) and the accent
+   * extras the Settings redesign leans on. The raw --primary-* vars
+   * already exist per-accent below; these mappings expose them (and
+   * --card-2) as Tailwind utilities: bg-card-2, bg-primary-soft,
+   * bg-primary-soft-2, hover:bg-primary-hover. */
+  --color-card-2: var(--card-2);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-soft: var(--primary-soft);
+  --color-primary-soft-2: var(--primary-soft-2);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/* ============================================================
+ * THEMING — two orthogonal dimensions
+ *
+ *   1. MODE   (light / dark)  → neutral surfaces. Selected with
+ *      `document.documentElement.dataset.mode`. Defaults to dark.
+ *   2. ACCENT (violet / …)    → the primary color only. Selected
+ *      with `document.documentElement.dataset.theme`.
+ *
+ * The two compose: any accent works in either mode. Neutral
+ * tokens (background / card / border / muted / sidebar surfaces /
+ * neutral charts / radius) live in the MODE blocks below; accent
+ * tokens (--primary*, --ring, --chart-1, --sidebar-primary*,
+ * --sidebar-ring) live in the ACCENT blocks. They set disjoint
+ * variables, so cascade order between them doesn't matter.
+ *
+ * `:root` carries the dark-mode + violet defaults so a visitor
+ * renders correctly before JS runs; the boot script in
+ * layout.tsx replays the saved mode + accent before first paint.
+ *
+ * The three `--primary-*` extras (hover / soft / soft-2) feed
+ * hovered primary buttons and tinted-primary surfaces (sidebar
+ * active pill, validation badges).
+ *
+ * Token shapes come straight from the design handoff at
+ * project/Color Themes.html — change one, change the other.
+ * ============================================================ */
+
+/* ---- MODE: neutral surfaces ---- */
+
+:root,
+html[data-mode="dark"] {
+  /* OpenCRM dark-first. Void #0D0D16 / Surface #13131E / Surface-2 #1A1A28 /
+     Foreground #EEEEF8 / muted #7878A0. Bordas com leve tinta violeta. */
+  --background: oklch(0.164 0.019 284);
+  --foreground: oklch(0.952 0.013 286);
+  --card: oklch(0.192 0.022 284);
+  --card-2: oklch(0.225 0.027 284);
+  --card-foreground: oklch(0.952 0.013 286);
+  --popover: oklch(0.192 0.022 284);
+  --popover-foreground: oklch(0.952 0.013 286);
+  --secondary: oklch(0.225 0.027 284);
+  --secondary-foreground: oklch(0.952 0.013 286);
+  --muted: oklch(0.225 0.027 284);
+  --muted-foreground: oklch(0.588 0.061 284);
+  --accent: oklch(0.236 0.034 283);
+  --accent-foreground: oklch(0.952 0.013 286);
+  --destructive: oklch(0.656 0.235 13.3);
+  --border: oklch(0.32 0.03 288);
+  --input: oklch(0.32 0.03 288);
+  --chart-2: oklch(0.756 0.176 158);
+  --chart-3: oklch(0.685 0.148 237);
+  --chart-4: oklch(0.813 0.165 75);
+  --chart-5: oklch(0.601 0.262 302);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.178 0.021 284);
+  --sidebar-foreground: oklch(0.952 0.013 286);
+  --sidebar-accent: oklch(0.225 0.027 284);
+  --sidebar-accent-foreground: oklch(0.952 0.013 286);
+  --sidebar-border: oklch(0.32 0.03 288);
+}
+
+html[data-mode="light"] {
+  /* OpenCRM light: superfícies brancas, texto Void #0D0D16, borda lavanda. */
+  --background: oklch(0.99 0.002 286);
+  --foreground: oklch(0.164 0.019 284);
+  --card: oklch(1 0 0);
+  --card-2: oklch(0.985 0.004 286);
+  --card-foreground: oklch(0.164 0.019 284);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.164 0.019 284);
+  --secondary: oklch(0.967 0.006 286);
+  --secondary-foreground: oklch(0.22 0.02 284);
+  --muted: oklch(0.967 0.006 286);
+  --muted-foreground: oklch(0.5 0.03 286);
+  --accent: oklch(0.96 0.008 286);
+  --accent-foreground: oklch(0.22 0.02 284);
+  --destructive: oklch(0.656 0.235 13.3);
+  --border: oklch(0.91 0.012 288);
+  --input: oklch(0.91 0.012 288);
+  --chart-2: oklch(0.756 0.176 158);
+  --chart-3: oklch(0.685 0.148 237);
+  --chart-4: oklch(0.813 0.165 75);
+  --chart-5: oklch(0.601 0.262 302);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0.004 286);
+  --sidebar-foreground: oklch(0.164 0.019 284);
+  --sidebar-accent: oklch(0.96 0.008 286);
+  --sidebar-accent-foreground: oklch(0.22 0.02 284);
+  --sidebar-border: oklch(0.91 0.012 288);
+}
+
+/* ---- ACCENT: primary color ---- */
+
+html[data-theme="violet"] {
+  /* Electric Violet #8800FB (primária da marca); hover = violet-light
+     #A040FF. Soft = tinta violeta para pílulas/superfícies realçadas. */
+  --primary: oklch(0.536 0.29 297);
+  --primary-foreground: oklch(0.985 0 0);
+  --primary-hover: oklch(0.601 0.262 302);
+  --primary-soft: oklch(0.536 0.29 297 / 0.12);
+  --primary-soft-2: oklch(0.536 0.29 297 / 0.2);
+  --ring: oklch(0.536 0.29 297);
+  --chart-1: oklch(0.536 0.29 297);
+  --sidebar-primary: oklch(0.536 0.29 297);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-ring: oklch(0.536 0.29 297);
+}
+
+html[data-theme="emerald"] {
+  --primary: oklch(0.62 0.16 162);
+  --primary-foreground: oklch(0.16 0.02 162);
+  --primary-hover: oklch(0.68 0.15 162);
+  --primary-soft: oklch(0.62 0.16 162 / 0.12);
+  --primary-soft-2: oklch(0.62 0.16 162 / 0.22);
+  --ring: oklch(0.62 0.16 162);
+  --chart-1: oklch(0.62 0.16 162);
+  --chart-2: oklch(0.7 0.14 195);
+  --sidebar-primary: oklch(0.62 0.16 162);
+  --sidebar-primary-foreground: oklch(0.16 0.02 162);
+  --sidebar-ring: oklch(0.62 0.16 162);
+}
+
+:root,
+html[data-theme="cobalt"] {
+  --primary: oklch(0.585 0.2 254);
+  --primary-foreground: oklch(0.985 0 0);
+  --primary-hover: oklch(0.66 0.18 254);
+  --primary-soft: oklch(0.585 0.2 254 / 0.12);
+  --primary-soft-2: oklch(0.585 0.2 254 / 0.22);
+  --ring: oklch(0.585 0.2 254);
+  --chart-1: oklch(0.585 0.2 254);
+  --chart-2: oklch(0.7 0.15 220);
+  --sidebar-primary: oklch(0.585 0.2 254);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-ring: oklch(0.585 0.2 254);
+}
+
+html[data-theme="amber"] {
+  --primary: oklch(0.745 0.16 65);
+  --primary-foreground: oklch(0.18 0.03 65);
+  --primary-hover: oklch(0.8 0.15 65);
+  --primary-soft: oklch(0.745 0.16 65 / 0.12);
+  --primary-soft-2: oklch(0.745 0.16 65 / 0.22);
+  --ring: oklch(0.745 0.16 65);
+  --chart-1: oklch(0.745 0.16 65);
+  --chart-2: oklch(0.7 0.15 35);
+  --sidebar-primary: oklch(0.745 0.16 65);
+  --sidebar-primary-foreground: oklch(0.18 0.03 65);
+  --sidebar-ring: oklch(0.745 0.16 65);
+}
+
+html[data-theme="rose"] {
+  --primary: oklch(0.645 0.22 16);
+  --primary-foreground: oklch(0.985 0 0);
+  --primary-hover: oklch(0.71 0.2 16);
+  --primary-soft: oklch(0.645 0.22 16 / 0.12);
+  --primary-soft-2: oklch(0.645 0.22 16 / 0.22);
+  --ring: oklch(0.645 0.22 16);
+  --chart-1: oklch(0.645 0.22 16);
+  --chart-2: oklch(0.7 0.18 340);
+  --sidebar-primary: oklch(0.645 0.22 16);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-ring: oklch(0.645 0.22 16);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+  /* Títulos na fonte de display da marca (Exo 2). */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-heading;
+  }
+  /* Seleção de texto com o violeta da marca. */
+  ::selection {
+    background-color: var(--primary-soft-2);
+  }
+
+  /*
+   * Barra de rolagem na identidade da marca.
+   *
+   * O padrão do Chrome/Edge é uma barra cinza-clara larga, desenhada para
+   * tema claro: no fundo escuro do CRM ela aparece como uma faixa clara
+   * gritante, que foi exatamente a reclamação. Aqui ela fica fina,
+   * transparente no trilho e violeta translúcido no polegar — visível o
+   * suficiente para orientar, discreta o suficiente para sumir.
+   *
+   * `scrollbar-*` (padrão, Firefox) e `::-webkit-scrollbar` (Chromium,
+   * Safari) coexistem de propósito: navegador nenhum entende os dois, e
+   * cada um ignora em silêncio o que não conhece.
+   */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary-soft-2) transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--primary-soft-2);
+    border-radius: 9999px;
+    /* Borda transparente + background-clip afina o polegar sem mexer na
+       largura do trilho, que é o que evita o layout "pular" no hover. */
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--primary);
+    background-clip: content-box;
+  }
+  /* Canto onde as duas barras se encontram — sem isto fica um quadradinho
+     cinza do tema do sistema. */
+  ::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  /*
+   * Acessibilidade: foco visível por padrão em qualquer <button> cru.
+   *
+   * O componente <Button> já tem o próprio anel; vários botões de ícone
+   * escritos à mão (painel do ClickUp, lista de conversas, header) não
+   * tinham nada — quem navega por teclado ficava sem saber onde está.
+   *
+   * Fica na camada `base` de propósito: as utilities do Tailwind (camada
+   * posterior) vencem esta regra, então o <Button>, que declara
+   * `outline-none` + `focus-visible:ring-*`, continua com o visual dele.
+   * Esta regra só "preenche o buraco" de quem não declarou nada.
+   */
+  button:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  /*
+   * Acessibilidade: quem pediu "reduzir movimento" no sistema não pode
+   * receber spinner girando, pulse nem transição. Fica global de
+   * propósito — o app usa animate-spin/animate-pulse/animate-ping e
+   * transition-* em dezenas de componentes, e caçar um a um deixaria
+   * buracos. Não desliga a animação (o que quebraria layouts que contam
+   * com o estado final), só a reduz a um instante.
+   */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
